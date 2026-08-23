@@ -104,14 +104,16 @@ jobs:
 
       - name: Generate daily database cache key
         id: cache-date
-        run: echo "bucket=$(($(date -u +%s) / 86400))" >> "${GITHUB_OUTPUT}"
+        run: |
+          echo "bucket=$(($(date -u +%s) / 86400))" >> "${GITHUB_OUTPUT}"
+          echo "tables=${DERIVED_TABLES_LIST//,/-}" >> "${GITHUB_OUTPUT}"
 
       - name: Cache prepared SQLite database
         id: cache-database
         uses: actions/cache@v4
         with:
           path: db.sqlite3
-          key: prepared-db-${{ runner.os }}-${{ env.SYNC_SCOPE }}-${{ env.DERIVED_TABLES_LIST }}-${{ steps.cache-date.outputs.bucket }}-${{ hashFiles('package.json', 'bunfig.toml', 'scripts/**', 'lib/**') }}
+          key: prepared-db-${{ runner.os }}-${{ env.SYNC_SCOPE }}-${{ steps.cache-date.outputs.tables }}-${{ steps.cache-date.outputs.bucket }}-${{ hashFiles('package.json', 'bunfig.toml', 'scripts/**', 'lib/**') }}
 
       - name: Build prepared SQLite database
         if: steps.cache-database.outputs.cache-hit != 'true'
