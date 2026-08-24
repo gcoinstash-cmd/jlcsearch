@@ -285,13 +285,13 @@ describe("is_extended_promotional column and filtering", () => {
     })
 
     // 1. Search all - should include is_extended_promotional in rows
-    const allRows = await searchIndex(kyselyDb, {})
+    const allRows = await searchIndex(kyselyDb as any, {})
     expect(allRows.length).toBe(3)
     const promoRow = allRows.find((r) => r.lcsc === 1002)
     expect(promoRow?.is_extended_promotional).toBe(1)
 
     // 2. Search filtered by is_extended_promotional: "true"
-    const promoOnlyRows = await searchIndex(kyselyDb, {
+    const promoOnlyRows = await searchIndex(kyselyDb as any, {
       is_extended_promotional: "true",
     })
     expect(promoOnlyRows.length).toBe(1)
@@ -300,7 +300,7 @@ describe("is_extended_promotional column and filtering", () => {
     expect(promoOnlyRows[0].is_extended_promotional).toBe(1)
 
     // 3. Search filtered by is_basic: "true"
-    const basicOnlyRows = await searchIndex(kyselyDb, {
+    const basicOnlyRows = await searchIndex(kyselyDb as any, {
       is_basic: "true",
     })
     expect(basicOnlyRows.length).toBe(1)
