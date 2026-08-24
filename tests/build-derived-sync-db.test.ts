@@ -59,6 +59,12 @@ const createSourceDatabase = async () => {
         unixepoch(), 'HDMI Female 19 Pins horizontal attachment', '', 250,
         '1-9:1.25,10-:0.75',
         '{"Connector Type":"HDMI","Number of Pins":"19"}'
+      ), (
+        67890, unixepoch(), 1, 1, 'Connectors',
+        'HDMI Connectors', 'HDMI-19P-PROMO', 'SMD', 19, 'Example', 'expand', 1,
+        unixepoch(), 'HDMI Female 19 Pins promotional', '', 100,
+        '1-9:1.50,10-:0.90',
+        '{"Connector Type":"HDMI","Number of Pins":"19"}'
       )`,
     )
     .run()
@@ -71,6 +77,10 @@ const createSourceDatabase = async () => {
         12345, unixepoch(), 'Example Inc.',
         '{"Gender":"Female","Mounting Style":"Surface Mount"}',
         'example.jpg', 'hdmi-19p'
+      ), (
+        67890, unixepoch(), 'Example Inc.',
+        '{"Gender":"Female","Mounting Style":"Surface Mount"}',
+        'example.jpg', 'hdmi-19p-promo'
       )`,
     )
     .run()
@@ -99,24 +109,38 @@ describe("buildDerivedSyncDatabase", () => {
     })
 
     const output = new Database(outputPath, { readonly: true })
-    const row = output
+    const rows = output
       .query(
         `SELECT
           lcsc, price1, number_of_pins, gender, mounting_style,
-          is_basic, is_preferred
-        FROM hdmi_port`,
+          is_basic, is_preferred, is_extended_promotional
+        FROM hdmi_port
+        ORDER BY lcsc`,
       )
-      .get() as Record<string, unknown>
+      .all() as Array<Record<string, unknown>>
 
-    expect(row).toEqual({
-      lcsc: 12345,
-      price1: 1.25,
-      number_of_pins: 19,
-      gender: "Female",
-      mounting_style: "Surface Mount",
-      is_basic: 1,
-      is_preferred: 1,
-    })
+    expect(rows).toEqual([
+      {
+        lcsc: 12345,
+        price1: 1.25,
+        number_of_pins: 19,
+        gender: "Female",
+        mounting_style: "Surface Mount",
+        is_basic: 1,
+        is_preferred: 1,
+        is_extended_promotional: 0,
+      },
+      {
+        lcsc: 67890,
+        price1: 1.5,
+        number_of_pins: 19,
+        gender: "Female",
+        mounting_style: "Surface Mount",
+        is_basic: 0,
+        is_preferred: 1,
+        is_extended_promotional: 1,
+      },
+    ])
     output.close()
   })
 
@@ -145,29 +169,46 @@ describe("buildDerivedSyncDatabase", () => {
     })
 
     const output = new Database(outputPath, { readonly: true })
-    const row = output
+    const rows = output
       .query(
         `SELECT
-          lcsc, mfr, category, subcategory, basic, preferred, stock,
+          lcsc, mfr, category, subcategory, basic, preferred, is_extended_promotional, stock,
           json_extract(extra, '$.manufacturer.name') AS manufacturer,
           json_extract(extra, '$.mpn') AS mpn,
           json_extract(extra, '$.attributes.Gender') AS gender
-        FROM component_catalog`,
+        FROM component_catalog
+        ORDER BY lcsc`,
       )
-      .get() as Record<string, unknown>
+      .all() as Array<Record<string, unknown>>
 
-    expect(row).toEqual({
-      lcsc: 12345,
-      mfr: "HDMI-19P",
-      category: "Connectors",
-      subcategory: "HDMI Connectors",
-      basic: 1,
-      preferred: 1,
-      stock: 250,
-      manufacturer: "Example Inc.",
-      mpn: "HDMI-19P",
-      gender: "Female",
-    })
+    expect(rows).toEqual([
+      {
+        lcsc: 12345,
+        mfr: "HDMI-19P",
+        category: "Connectors",
+        subcategory: "HDMI Connectors",
+        basic: 1,
+        preferred: 1,
+        is_extended_promotional: 0,
+        stock: 250,
+        manufacturer: "Example Inc.",
+        mpn: "HDMI-19P",
+        gender: "Female",
+      },
+      {
+        lcsc: 67890,
+        mfr: "HDMI-19P-PROMO",
+        category: "Connectors",
+        subcategory: "HDMI Connectors",
+        basic: 0,
+        preferred: 1,
+        is_extended_promotional: 1,
+        stock: 100,
+        manufacturer: "Example Inc.",
+        mpn: "HDMI-19P-PROMO",
+        gender: "Female",
+      },
+    ])
     output.close()
   })
 
@@ -205,6 +246,7 @@ describe("buildDerivedSyncDatabase", () => {
     ).toEqual([
       { lcsc: 12345, stock: 250 },
       { lcsc: 54321, stock: 0 },
+      { lcsc: 67890, stock: 100 },
     ])
     output.close()
   })
