@@ -15,3 +15,19 @@ describe("parseAndConvertSiUnit byte values", () => {
     })
   })
 })
+
+describe("parseAndConvertSiUnit voltage values", () => {
+  test.each([
+    ["5V", 5],
+    ["3.3V", 3.3],
+    ["500mV", 0.5],
+    ["12kV", 12000],
+  ])("converts %s to volts", (rawValue, expectedValue) => {
+    expect(parseAndConvertSiUnit(rawValue)).toEqual({
+      parsedUnit: rawValue.replace(/[\d.]/g, ""),
+      unitOfValue: "V",
+      value: expectedValue,
+    })
+  })
+})
+
