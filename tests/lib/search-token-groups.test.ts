@@ -26,3 +26,12 @@ test("search token groups preserve non-barrel-jack terms", () => {
     ["receptacle"],
   ])
 })
+
+test("search token groups ignore redundant consecutive whitespace", () => {
+  expect(buildSearchTokenGroups("usb    c    header")).toEqual([
+    ["usb"],
+    ["c"],
+    ["header"],
+  ])
+})
+
