@@ -26,3 +26,11 @@ test("search token groups preserve non-barrel-jack terms", () => {
     ["receptacle"],
   ])
 })
+
+test("search token groups convert uppercase component names into lowercase tokens", () => {
+  expect(buildSearchTokenGroups("RESISTOR 10K")).toEqual([
+    ["resistor"],
+    ["10k"],
+  ])
+})
+
