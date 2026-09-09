@@ -15,3 +15,19 @@ describe("parseAndConvertSiUnit byte values", () => {
     })
   })
 })
+
+describe("parseAndConvertSiUnit resistance values", () => {
+  test.each([
+    ["100Ω", 100],
+    ["4.7kΩ", 4700],
+    ["1MΩ", 1e6],
+    ["20mΩ", 0.02],
+  ])("converts %s to ohms", (rawValue, expectedValue) => {
+    expect(parseAndConvertSiUnit(rawValue)).toEqual({
+      parsedUnit: rawValue.replace(/[\d.]/g, ""),
+      unitOfValue: "Ω",
+      value: expectedValue,
+    })
+  })
+})
+
