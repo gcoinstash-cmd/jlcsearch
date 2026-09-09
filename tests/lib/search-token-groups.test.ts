@@ -26,3 +26,12 @@ test("search token groups preserve non-barrel-jack terms", () => {
     ["receptacle"],
   ])
 })
+
+test("search token groups normalize hyphens and uppercase terms consistently", () => {
+  expect(buildSearchTokenGroups("TYPE-C USB")).toEqual([
+    ["type"],
+    ["c"],
+    ["usb"],
+  ])
+})
+
