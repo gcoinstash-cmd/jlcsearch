@@ -7,6 +7,9 @@ describe("parseAndConvertSiUnit byte values", () => {
     ["64KB", 64 * 1024],
     ["2.25KB", 2.25 * 1024],
     ["1MB", 1024 * 1024],
+    ["2GB", 2 * 1024 * 1024 * 1024],
+    ["4GByte", 4 * 1024 * 1024 * 1024],
+    ["512KBytes", 512 * 1024],
   ])("converts %s to bytes", (rawValue, expectedValue) => {
     expect(parseAndConvertSiUnit(rawValue)).toEqual({
       parsedUnit: rawValue.replace(/[\d.]/g, ""),
