@@ -15,3 +15,17 @@ describe("parseAndConvertSiUnit byte values", () => {
     })
   })
 })
+describe("parseAndConvertSiUnit tolerance percentage formats", () => {
+  test.each([
+    ["1%", 0.01, "%"],
+    ["0.1%", 0.001, "%"],
+    ["5%", 0.05, "%"],
+    ["20%", 0.2, "%"],
+  ])("converts tolerance %s accurately", (rawValue, expectedValue, expectedUnit) => {
+    expect(parseAndConvertSiUnit(rawValue)).toEqual({
+      parsedUnit: rawValue.replace(/[\d.]/g, ""),
+      unitOfValue: expectedUnit,
+      value: expectedValue,
+    })
+  })
+})
