@@ -15,3 +15,17 @@ describe("parseAndConvertSiUnit byte values", () => {
     })
   })
 })
+describe("parseAndConvertSiUnit power values with milliwatt and kilowatt", () => {
+  test.each([
+    ["250mW", 0.25, "W"],
+    ["50mW", 0.05, "W"],
+    ["1W", 1, "W"],
+    ["2.5kW", 2500, "W"],
+  ])("converts power %s accurately", (rawValue, expectedValue, expectedUnit) => {
+    expect(parseAndConvertSiUnit(rawValue)).toEqual({
+      parsedUnit: rawValue.replace(/[\d.]/g, ""),
+      unitOfValue: expectedUnit,
+      value: expectedValue,
+    })
+  })
+})
