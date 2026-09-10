@@ -15,3 +15,16 @@ describe("parseAndConvertSiUnit byte values", () => {
     })
   })
 })
+describe("parseAndConvertSiUnit multi-unit precision formats", () => {
+  test.each([
+    ["100nF", 100e-9, "F"],
+    ["4.7uF", 4.7e-6, "F"],
+    ["10pF", 10e-12, "F"],
+  ])("converts capacitance %s accurately", (rawValue, expectedValue, expectedUnit) => {
+    expect(parseAndConvertSiUnit(rawValue)).toEqual({
+      parsedUnit: rawValue.replace(/[\d.]/g, ""),
+      unitOfValue: expectedUnit,
+      value: expectedValue,
+    })
+  })
+})
