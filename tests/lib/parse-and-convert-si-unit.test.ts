@@ -15,3 +15,20 @@ describe("parseAndConvertSiUnit byte values", () => {
     })
   })
 })
+
+describe("parseAndConvertSiUnit capacitance values", () => {
+  test.each([
+    ["100pF", 100e-12],
+    ["10nF", 10e-9],
+    ["4.7uF", 4.7e-6],
+    ["100µF", 100e-6],
+    ["1mF", 1e-3],
+  ])("converts %s to farads", (rawValue, expectedValue) => {
+    expect(parseAndConvertSiUnit(rawValue)).toEqual({
+      parsedUnit: rawValue.replace(/[\d.]/g, ""),
+      unitOfValue: "F",
+      value: expectedValue,
+    })
+  })
+})
+
