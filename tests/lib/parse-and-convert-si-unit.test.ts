@@ -15,3 +15,17 @@ describe("parseAndConvertSiUnit byte values", () => {
     })
   })
 })
+describe("parseAndConvertSiUnit physical length values with mm, um, and mil", () => {
+  test.each([
+    ["0.8mm", 0.8e-3, "m"],
+    ["100um", 100e-6, "m"],
+    ["50mil", 1.27e-3, "m"],
+    ["10mm", 10e-3, "m"],
+  ])("converts length %s accurately", (rawValue, expectedValue, expectedUnit) => {
+    expect(parseAndConvertSiUnit(rawValue)).toEqual({
+      parsedUnit: rawValue.replace(/[\d.]/g, ""),
+      unitOfValue: expectedUnit,
+      value: expectedValue,
+    })
+  })
+})
