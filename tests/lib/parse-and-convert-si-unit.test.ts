@@ -15,3 +15,16 @@ describe("parseAndConvertSiUnit byte values", () => {
     })
   })
 })
+describe("parseAndConvertSiUnit milliohm and fractional resistance formats", () => {
+  test.each([
+    ["100mR", 0.1, "R"],
+    ["50mR", 0.05, "R"],
+    ["10mR", 0.01, "R"],
+  ])("converts milliohm %s accurately", (rawValue, expectedValue, expectedUnit) => {
+    expect(parseAndConvertSiUnit(rawValue)).toEqual({
+      parsedUnit: rawValue.replace(/[\d.]/g, ""),
+      unitOfValue: expectedUnit,
+      value: expectedValue,
+    })
+  })
+})
