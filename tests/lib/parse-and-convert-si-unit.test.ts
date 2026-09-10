@@ -15,3 +15,17 @@ describe("parseAndConvertSiUnit byte values", () => {
     })
   })
 })
+describe("parseAndConvertSiUnit voltage values with millivolt and kilovolt", () => {
+  test.each([
+    ["500mV", 0.5, "V"],
+    ["3.3V", 3.3, "V"],
+    ["12V", 12, "V"],
+    ["1kV", 1000, "V"],
+  ])("converts voltage %s accurately", (rawValue, expectedValue, expectedUnit) => {
+    expect(parseAndConvertSiUnit(rawValue)).toEqual({
+      parsedUnit: rawValue.replace(/[\d.]/g, ""),
+      unitOfValue: expectedUnit,
+      value: expectedValue,
+    })
+  })
+})
