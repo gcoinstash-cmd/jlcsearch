@@ -15,3 +15,16 @@ describe("parseAndConvertSiUnit byte values", () => {
     })
   })
 })
+describe("parseAndConvertSiUnit frequency values with kHz, MHz, and GHz", () => {
+  test.each([
+    ["32.768kHz", 32.768e3, "Hz"],
+    ["16MHz", 16e6, "Hz"],
+    ["2.4GHz", 2.4e9, "Hz"],
+  ])("converts frequency %s accurately", (rawValue, expectedValue, expectedUnit) => {
+    expect(parseAndConvertSiUnit(rawValue)).toEqual({
+      parsedUnit: rawValue.replace(/[\d.]/g, ""),
+      unitOfValue: expectedUnit,
+      value: expectedValue,
+    })
+  })
+})
