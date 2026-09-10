@@ -15,3 +15,19 @@ describe("parseAndConvertSiUnit byte values", () => {
     })
   })
 })
+
+describe("parseAndConvertSiUnit frequency values", () => {
+  test.each([
+    ["50Hz", 50],
+    ["32.768kHz", 32768],
+    ["16MHz", 16e6],
+    ["100MHz", 100e6],
+  ])("converts %s to hertz", (rawValue, expectedValue) => {
+    expect(parseAndConvertSiUnit(rawValue)).toEqual({
+      parsedUnit: rawValue.replace(/[\d.]/g, ""),
+      unitOfValue: "Hz",
+      value: expectedValue,
+    })
+  })
+})
+
