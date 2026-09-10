@@ -15,3 +15,17 @@ describe("parseAndConvertSiUnit byte values", () => {
     })
   })
 })
+describe("parseAndConvertSiUnit resistance values with mega and kilo ohms", () => {
+  test.each([
+    ["10k", 10e3, ""],
+    ["4.7k", 4.7e3, ""],
+    ["1M", 1e6, ""],
+    ["2.2M", 2.2e6, ""],
+  ])("converts resistance %s accurately", (rawValue, expectedValue, expectedUnit) => {
+    expect(parseAndConvertSiUnit(rawValue)).toEqual({
+      parsedUnit: rawValue.replace(/[\d.]/g, ""),
+      unitOfValue: expectedUnit,
+      value: expectedValue,
+    })
+  })
+})
