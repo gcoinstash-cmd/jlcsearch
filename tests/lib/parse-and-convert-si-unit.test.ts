@@ -15,3 +15,17 @@ describe("parseAndConvertSiUnit byte values", () => {
     })
   })
 })
+describe("parseAndConvertSiUnit temperature coefficient values in ppm and degC", () => {
+  test.each([
+    ["50ppm", 50e-6, "ppm"],
+    ["100ppm", 100e-6, "ppm"],
+    ["25C", 25, "C"],
+    ["125C", 125, "C"],
+  ])("converts temperature metric %s accurately", (rawValue, expectedValue, expectedUnit) => {
+    expect(parseAndConvertSiUnit(rawValue)).toEqual({
+      parsedUnit: rawValue.replace(/[\d.]/g, ""),
+      unitOfValue: expectedUnit,
+      value: expectedValue,
+    })
+  })
+})
