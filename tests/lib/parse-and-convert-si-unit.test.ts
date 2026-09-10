@@ -15,3 +15,17 @@ describe("parseAndConvertSiUnit byte values", () => {
     })
   })
 })
+describe("parseAndConvertSiUnit current values with milliampere and microampere", () => {
+  test.each([
+    ["500mA", 0.5, "A"],
+    ["20mA", 0.02, "A"],
+    ["100uA", 100e-6, "A"],
+    ["2A", 2, "A"],
+  ])("converts current %s accurately", (rawValue, expectedValue, expectedUnit) => {
+    expect(parseAndConvertSiUnit(rawValue)).toEqual({
+      parsedUnit: rawValue.replace(/[\d.]/g, ""),
+      unitOfValue: expectedUnit,
+      value: expectedValue,
+    })
+  })
+})
